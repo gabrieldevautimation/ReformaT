@@ -24,8 +24,8 @@ export function OrgaosPage() {
                         <div className="flex items-center gap-4 mb-6">
                             <Building2 className="text-gov-blue" size={40} />
                             <div>
-                                <h1 className="text-3xl font-black text-gov-blue">Órgãos do Governo</h1>
-                                <p className="text-gray-600">Estrutura do Governo Federal</p>
+                                <h1 className="text-3xl font-black text-gov-blue">Instituições Relacionadas</h1>
+                                <p className="text-gray-600">Estrutura Institucional</p>
                             </div>
                         </div>
 

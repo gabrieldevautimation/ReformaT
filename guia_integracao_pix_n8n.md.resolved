@@ -1,0 +1,603 @@
+# 🔥 Guia Completo: Integração de Pagamento PIX com N8N
+
+## 📋 Índice
+1. [Visão Geral da Arquitetura](#visão-geral)
+2. [Configuração do Frontend (React + TypeScript)](#frontend)
+3. [Configuração do N8N](#n8n)
+4. [API de Pagamento](#api)
+5. [Fluxo de Dados Completo](#fluxo)
+6. [Debugging e Troubleshooting](#debug)
+
+---
+
+## 🎯 Visão Geral da Arquitetura {#visão-geral}
+
+### Stack Tecnológico
+- **Frontend**: React + TypeScript + Vite
+- **Biblioteca QR Code**: `react-qr-code`
+- **Middleware**: N8N (auto-hospedado)
+- **API de Pagamento**: Nova Era Pagamentos (ou similar)
+
+### Fluxo Resumido
+```
+[React App] → POST → [N8N Webhook] → POST → [API Pagamento] 
+                                                      ↓
+[React App] ← JSON ← [N8N Workflow] ← JSON Response ←
+```
+
+---
+
+## 📱 Configuração do Frontend (React + TypeScript) {#frontend}
+
+### 1. Estrutura de Arquivos
+
+```
+src/
+├── pages/
+│   └── Checkout.tsx          # Página principal de checkout
+├── components/
+│   └── CheckoutDialog.tsx    # Modal de checkout (alternativa)
+```
+
+### 2. Dependências Necessárias
+
+```bash
+npm install react-qr-code sonner framer-motion
+```
+
+### 3. Configuração dos Webhooks
+
+No arquivo [Checkout.tsx](file:///C:/Users/Gabriel%20Vieira/Documents/DarkStore/dark-code-academy/src/pages/Checkout.tsx):
+
+```typescript
+const WEBHOOK_GENERATE_PIX = "https://n8n.srv1218600.hstgr.cloud/webhook/f05ae518-ce6f-43ee-bb32-89279ff6a66e";
+const WEBHOOK_CHECK_STATUS = "https://n8n.srv1218600.hstgr.cloud/webhook/c75531a7-38ad-407f-8635-203af21704be";
+```
+
+> **⚠️ IMPORTANTE**: Esses são os endpoints do N8N. Cada webhook tem um ID único gerado automaticamente pelo N8N.
+
+### 4. Payload Enviado ao N8N (Geração de PIX)
+
+```typescript
+const response = await fetch(WEBHOOK_GENERATE_PIX, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        name: "Nome do Cliente",           // string
+        email: "email@cliente.com",        // string
+        total: 47.00,                      // number (preço em R$)
+        products: [{                       // array de produtos
+            id: "mentoria_2026",
+            name: "Mentoria IA PROFIT 2026",
+            price: 47.00,
+            quantity: 1
+        }]
+    })
+});
+```
+
+### 5. Processamento da Resposta do N8N
+
+#### Estrutura Esperada da Resposta
+
+O N8N pode retornar a resposta em diferentes formatos:
+
+**Opção 1: Objeto Direto**
+```json
+{
+  "qrcode": "00020126580014br.gov.bcb.pix...",
+  "transaction_id": "abc123xyz",
+  "status": "pending"
+}
+```
+
+**Opção 2: Array com Objeto**
+```json
+[
+  {
+    "qrcode": "00020126580014br.gov.bcb.pix...",
+    "transaction_id": "abc123xyz"
+  }
+]
+```
+
+**Opção 3: Objeto Aninhado**
+```json
+{
+  "data": {
+    "payment": {
+      "copia_e_cola": "00020126580014br.gov.bcb.pix...",
+      "id": "abc123"
+    }
+  }
+}
+```
+
+#### Função de Extração Recursiva (God Mode)
+
+```typescript
+const findPixCode = (obj: any, depth: number = 0): string | null => {
+    if (!obj) return null;
+
+    // Se for string, verifica se é código PIX
+    if (typeof obj === "string") {
+        const clean = obj.trim();
+        // Códigos PIX começam com "000201" OU são strings longas (100+ chars)
+        if (clean.startsWith("000201") || clean.length > 100) {
+            return clean;
+        }
+    }
+
+    if (typeof obj === "object") {
+        // Lista de possíveis chaves onde o QR code pode estar
+        const keys = [
+            "qrcode", "qr_code", "copia_e_cola", 
+            "pix_code", "pixCode", "code", 
+            "emv", "payload", "qr", "brcode"
+        ];
+        
+        // Tenta encontrar em chaves conhecidas primeiro
+        for (const key of keys) {
+            if (obj[key] && typeof obj[key] === "string") {
+                const clean = obj[key].trim();
+                if (clean.startsWith("000201") || clean.length > 100) {
+                    return clean;
+                }
+            }
+        }
+
+        // Busca recursiva em todas as propriedades
+        for (const key in obj) {
+            if (obj[key] && typeof obj[key] === "object") {
+                const found = findPixCode(obj[key], depth + 1);
+                if (found) return found;
+            }
+        }
+    }
+    
+    return null;
+};
+```
+
+#### Uso no Código
+
+```typescript
+const data = await response.json();
+
+// Se for array, pega o primeiro elemento
+const actualData = Array.isArray(data) ? data[0] : data;
+
+const pixCode = findPixCode(actualData);
+const transactionId = findTransactionId(actualData);
+
+if (pixCode && transactionId) {
+    setPixCode(pixCode);
+    setTransactionId(transactionId);
+    setStep("qrcode"); // Exibe o QR code
+}
+```
+
+### 6. Exibição do QR Code
+
+```tsx
+import QRCode from "react-qr-code";
+
+<QRCode
+    size={220}
+    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+    value={pixCode}  // String do código PIX
+    viewBox={`0 0 256 256`}
+/>
+```
+
+### 7. Verificação de Status do Pagamento
+
+```typescript
+const checkStatus = async () => {
+    const response = await fetch(WEBHOOK_CHECK_STATUS, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            transaction_id: transactionId,
+            id: transactionId,  // Envia ambos para compatibilidade
+            email: email
+        })
+    });
+
+    const data = await response.json();
+
+    if (data.status === "approved" || data.paid === true) {
+        setStep("approved"); // Pagamento confirmado
+    }
+};
+
+// Polling a cada 5 segundos
+useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (step === "qrcode") {
+        interval = setInterval(checkStatus, 5000);
+    }
+    return () => clearInterval(interval);
+}, [step, transactionId]);
+```
+
+---
+
+## ⚙️ Configuração do N8N {#n8n}
+
+### 1. Workflow de Geração de PIX
+
+O workflow do N8N deve ter:
+
+#### **Node 1: Webhook (Trigger)**
+- **URL**: `/webhook/f05ae518-ce6f-43ee-bb32-89279ff6a66e`
+- **Método**: POST
+- **Responde**: Imediatamente (Response Mode: "When Last Node Finishes")
+
+#### **Node 2: Processar Dados do Frontend**
+
+```javascript
+// Exemplo de código no node "Function" ou "Code" do N8N
+const body = $input.item.json.body;
+
+return {
+    json: {
+        customer_name: body.name,
+        customer_email: body.email,
+        amount: body.total,
+        items: body.products.map(p => ({
+            name: p.name,
+            quantity: p.quantity,
+            unit_amount: Math.round(p.price * 100) // Converte para centavos
+        }))
+    }
+};
+```
+
+#### **Node 3: HTTP Request para API de Pagamento**
+
+**Configuração:**
+- **Método**: POST
+- **URL**: `https://api.novaeradigital.shop/v1/payments` (exemplo)
+- **Authentication**: Bearer Token ou API Key
+- **Headers**:
+  ```json
+  {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer SEU_TOKEN_AQUI"
+  }
+  ```
+
+**Body (JSON):**
+```json
+{
+  "amount": {{ $json.amount }},
+  "customer": {
+    "name": "{{ $json.customer_name }}",
+    "email": "{{ $json.customer_email }}"
+  },
+  "items": {{ $json.items }},
+  "payment_method": "pix"
+}
+```
+
+#### **Node 4: Processar Resposta da API**
+
+```javascript
+// Extrai os dados importantes da resposta
+const apiResponse = $input.item.json;
+
+return {
+    json: {
+        qrcode: apiResponse.pix?.qr_code || apiResponse.qrcode,
+        transaction_id: apiResponse.id || apiResponse.transaction_id,
+        status: apiResponse.status || "pending"
+    }
+};
+```
+
+#### **Node 5: Respond to Webhook**
+- Retorna o JSON processado para o frontend
+
+### 2. Workflow de Verificação de Status
+
+#### **Node 1: Webhook (Trigger)**
+- **URL**: `/webhook/c75531a7-38ad-407f-8635-203af21704be`
+- **Método**: POST
+
+#### **Node 2: HTTP Request - Consultar Status**
+
+**URL**: `https://api.novaeradigital.shop/v1/payments/{{ $json.body.transaction_id }}`
+
+**Método**: GET
+
+#### **Node 3: Retornar Status**
+
+```javascript
+const payment = $input.item.json;
+
+return {
+    json: {
+        status: payment.status,
+        paid: payment.status === "approved" || payment.status === "paid"
+    }
+};
+```
+
+---
+
+## 💳 API de Pagamento {#api}
+
+### Endpoint de Criação de Pagamento PIX
+
+**Request:**
+```http
+POST https://api.novaeradigital.shop/v1/payments
+Authorization: Bearer YOUR_API_TOKEN
+Content-Type: application/json
+
+{
+  "amount": 4700,  // Em centavos (R$ 47,00)
+  "customer": {
+    "name": "João Silva",
+    "email": "joao@example.com"
+  },
+  "items": [
+    {
+      "name": "Mentoria IA PROFIT 2026",
+      "quantity": 1,
+      "unit_amount": 4700
+    }
+  ],
+  "payment_method": "pix"
+}
+```
+
+**Response:**
+```json
+{
+  "id": "pay_abc123xyz",
+  "status": "pending",
+  "amount": 4700,
+  "pix": {
+    "qr_code": "00020126580014br.gov.bcb.pix...",
+    "expires_at": "2026-01-21T15:30:00Z"
+  }
+}
+```
+
+### Endpoint de Consulta de Status
+
+**Request:**
+```http
+GET https://api.novaeradigital.shop/v1/payments/pay_abc123xyz
+Authorization: Bearer YOUR_API_TOKEN
+```
+
+**Response:**
+```json
+{
+  "id": "pay_abc123xyz",
+  "status": "approved",  // ou "pending", "failed"
+  "paid_at": "2026-01-21T12:45:00Z"
+}
+```
+
+---
+
+## 🔄 Fluxo de Dados Completo {#fluxo}
+
+### 1️⃣ Geração do QR Code PIX
+
+```mermaid
+sequenceDiagram
+    participant User as Usuário
+    participant React as React App
+    participant N8N as N8N Webhook
+    participant API as API Pagamento
+
+    User->>React: Preenche formulário (nome, email)
+    User->>React: Clica "Gerar PIX"
+    
+    React->>React: setStep("loading")
+    React->>N8N: POST /webhook/gerar-pix
+    Note over React,N8N: { name, email, total, products }
+    
+    N8N->>N8N: Processa dados
+    N8N->>API: POST /v1/payments
+    Note over N8N,API: { amount, customer, items }
+    
+    API->>API: Cria cobrança PIX
+    API->>N8N: Response com QR code
+    Note over API,N8N: { id, qr_code, status }
+    
+    N8N->>React: Retorna JSON
+    Note over N8N,React: { qrcode, transaction_id }
+    
+    React->>React: findPixCode(data)
+    React->>React: setPixCode(code)
+    React->>React: setStep("qrcode")
+    React->>User: Exibe QR Code
+```
+
+### 2️⃣ Verificação de Pagamento (Polling)
+
+```mermaid
+sequenceDiagram
+    participant React as React App
+    participant N8N as N8N Webhook
+    participant API as API Pagamento
+
+    loop A cada 5 segundos
+        React->>N8N: POST /webhook/check-status
+        Note over React,N8N: { transaction_id, email }
+        
+        N8N->>API: GET /v1/payments/{id}
+        API->>N8N: { status: "approved" }
+        N8N->>React: { status: "approved", paid: true }
+        
+        alt Pagamento Aprovado
+            React->>React: setStep("approved")
+            React->>React: Exibe tela de sucesso
+        else Ainda Pendente
+            React->>React: Continua polling
+        end
+    end
+```
+
+---
+
+## 🐛 Debugging e Troubleshooting {#debug}
+
+### Problema 1: QR Code Não Aparece
+
+**Sintoma**: Frontend mostra loading infinito ou erro "QR Code não encontrado"
+
+**Checklist**:
+
+1. **Verificar resposta do N8N no console:**
+   ```typescript
+   console.log("Resposta N8N:", JSON.stringify(data, null, 2));
+   ```
+
+2. **Verificar se o webhook está ativo no N8N:**
+   - Abra o workflow no N8N
+   - Verifique se está "Active" (toggle verde)
+   - Teste manualmente com um POST via Postman
+
+3. **Verificar credenciais da API de pagamento:**
+   - Token expirado?
+   - Permissões corretas?
+
+4. **Verificar estrutura da resposta:**
+   - A resposta contém o campo `qrcode` ou similar?
+   - Use a função [findPixCode](file:///C:/Users/Gabriel%20Vieira/Documents/DarkStore/dark-code-academy/src/components/CheckoutDialog.tsx#46-75) com logs detalhados
+
+### Problema 2: Status Nunca Muda para "Approved"
+
+**Sintoma**: QR Code é exibido, mas mesmo após pagar, não confirma
+
+**Checklist**:
+
+1. **Verificar transaction_id:**
+   ```typescript
+   console.log("Transaction ID sendo enviado:", transactionId);
+   ```
+
+2. **Testar webhook de status manualmente:**
+   ```bash
+   curl -X POST https://n8n.../webhook/check-status \
+     -H "Content-Type: application/json" \
+     -d '{"transaction_id":"pay_abc123"}'
+   ```
+
+3. **Verificar se a API retorna o status correto:**
+   - Status pode ser: `"approved"`, `"paid"`, `"completed"`
+   - Ajuste a condição no código
+
+### Problema 3: CORS Error
+
+**Sintoma**: `Failed to fetch` ou erro de CORS
+
+**Solução**:
+
+No N8N, certifique-se de que o webhook permite CORS:
+- Vá em Settings → Executions
+- Habilite "Allow CORS"
+- Ou configure manualmente no nginx/proxy reverso
+
+### Logs Úteis para Debug
+
+```typescript
+// No handleGeneratePix
+console.log("🔥 [REQUEST] Enviando para N8N:", {
+    url: WEBHOOK_GENERATE_PIX,
+    payload: { name, email, total, products }
+});
+
+console.log("🔥 [RESPONSE] Status HTTP:", response.status);
+console.log("🔥 [RESPONSE] Headers:", response.headers);
+console.log("🔥 [RESPONSE] Body:", JSON.stringify(data, null, 2));
+
+console.log("🔥 [EXTRACTED] PIX Code:", pixCode ? "✅" : "❌");
+console.log("🔥 [EXTRACTED] Transaction ID:", transactionId || "❌");
+```
+
+---
+
+## ✅ Checklist Final de Implementação
+
+- [ ] N8N instalado e acessível via HTTPS
+- [ ] Workflow de geração de PIX criado e ativado
+- [ ] Workflow de verificação de status criado e ativado
+- [ ] Credenciais da API de pagamento configuradas no N8N
+- [ ] Frontend configurado com URLs corretas dos webhooks
+- [ ] Biblioteca `react-qr-code` instalada
+- [ ] Função [findPixCode](file:///C:/Users/Gabriel%20Vieira/Documents/DarkStore/dark-code-academy/src/components/CheckoutDialog.tsx#46-75) implementada
+- [ ] Polling de status configurado (5 segundos)
+- [ ] Timeout configurado (15 segundos no fetch)
+- [ ] Logs de debug implementados
+- [ ] Teste end-to-end realizado
+
+---
+
+## 🎯 Exemplo de Teste Manual
+
+### 1. Testar Geração de PIX
+
+```bash
+curl -X POST https://n8n.srv1218600.hstgr.cloud/webhook/f05ae518-ce6f-43ee-bb32-89279ff6a66e \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Teste Silva",
+    "email": "teste@example.com",
+    "total": 47.00,
+    "products": [{
+      "id": "test",
+      "name": "Produto Teste",
+      "price": 47.00,
+      "quantity": 1
+    }]
+  }'
+```
+
+**Resposta esperada:**
+```json
+{
+  "qrcode": "00020126580014br.gov.bcb.pix...",
+  "transaction_id": "pay_abc123"
+}
+```
+
+### 2. Testar Verificação de Status
+
+```bash
+curl -X POST https://n8n.srv1218600.hstgr.cloud/webhook/c75531a7-38ad-407f-8635-203af21704be \
+  -H "Content-Type: application/json" \
+  -d '{
+    "transaction_id": "pay_abc123",
+    "email": "teste@example.com"
+  }'
+```
+
+**Resposta esperada:**
+```json
+{
+  "status": "pending",
+  "paid": false
+}
+```
+
+---
+
+## 📚 Referências
+
+- [Documentação react-qr-code](https://www.npmjs.com/package/react-qr-code)
+- [N8N Documentation](https://docs.n8n.io/)
+- [Especificação PIX (BACEN)](https://www.bcb.gov.br/estabilidadefinanceira/pix)
+
+---
+
+**Criado por**: Antigravity AI Assistant  
+**Data**: 21/01/2026  
+**Versão**: 1.0

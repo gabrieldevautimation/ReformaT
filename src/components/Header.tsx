@@ -28,8 +28,8 @@ export function Header() {
                         </div>
 
                         <Link to="/" className="flex flex-col hover:opacity-80 transition-opacity">
-                            <h1 className="text-3xl font-extrabold text-gov-blue tracking-tight leading-none">
-                                gov.br
+                            <h1 className="text-xl font-extrabold text-gov-blue tracking-tight leading-none uppercase">
+                                Em parceria com a unec
                             </h1>
                             <span className="text-gov-text text-sm font-semibold uppercase tracking-wider">
                                 Reforma Tributária

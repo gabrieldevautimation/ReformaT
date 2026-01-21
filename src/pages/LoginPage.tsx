@@ -97,7 +97,7 @@ export function LoginPage() {
                                 <Lock className="text-white" size={32} />
                             </div>
                             <h1 className="text-3xl font-black text-gov-blue mb-2">Entrar</h1>
-                            <p className="text-gray-600">Acesse sua conta gov.br</p>
+                            <p className="text-gray-600">Acesse sua conta</p>
                         </div>
 
                         {error && (
@@ -162,8 +162,8 @@ export function LoginPage() {
                                 type="submit"
                                 disabled={loading}
                                 className={`w-full font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors ${loading
-                                        ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                                        : 'bg-gov-blue hover:bg-gov-dark text-white'
+                                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                                    : 'bg-gov-blue hover:bg-gov-dark text-white'
                                     }`}
                             >
                                 {loading ? 'AUTENTICANDO...' : 'ENTRAR'}

@@ -49,7 +49,7 @@ export function Footer() {
                 <div className="gov-container flex flex-col md:flex-row justify-between items-center gap-4 text-xs opacity-70">
                     <p>Todo o conteúdo deste site está publicado sob a licença Creative Commons Atribuição-SemDerivações 3.0 Não Adaptada.</p>
                     <div className="flex items-center gap-2">
-                        <span className="font-bold text-lg">GOV.BR</span>
+                        <span className="font-bold text-lg uppercase">Em parceria com a unec</span>
                     </div>
                 </div>
             </div>

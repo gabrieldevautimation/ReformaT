@@ -101,8 +101,8 @@ export function SuccessPage() {
                     <div className="mt-8 text-center text-sm text-gray-600">
                         <p>
                             Problemas com o download? Entre em contato:{' '}
-                            <a href="mailto:suporte@reformatributaria.gov.br" className="text-gov-blue font-bold hover:underline">
-                                suporte@reformatributaria.gov.br
+                            <a href="mailto:suporte@reformatributaria.com" className="text-gov-blue font-bold hover:underline">
+                                suporte@reformatributaria.com
                             </a>
                         </p>
                     </div>
