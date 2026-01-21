@@ -77,7 +77,7 @@ export function ComparisonSection() {
                         <div className="mt-6 p-4 bg-gov-green text-white rounded-lg">
                             <Check className="mb-2" size={24} />
                             <p className="text-sm font-bold">Investimento Total:</p>
-                            <p className="text-2xl font-black">R$ 179,00</p>
+                            <p className="text-2xl font-black">R$ 89,00</p>
                             <p className="text-xs mt-1 opacity-90">Retorno estimado: 50x - 1.000x nos próximos 12 meses</p>
                         </div>
                     </div>

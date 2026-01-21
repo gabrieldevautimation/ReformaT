@@ -54,7 +54,7 @@ export function CourseSection() {
                         <h3 className="text-2xl font-bold mb-2">Investimento Único</h3>
                         <p className="text-blue-200 text-sm mb-8">Acesso vitalício + Atualizações de 2025</p>
 
-                        <div className="text-6xl font-black mb-8">R$ 179<span className="text-2xl font-medium">,00</span></div>
+                        <div className="text-6xl font-black mb-8">R$ 89<span className="text-2xl font-medium">,00</span></div>
 
                         <a href="https://ambienteseguro.org.ua/c/370fa74274" className="w-full bg-gov-green hover:bg-green-600 text-white font-bold py-4 rounded-lg text-lg shadow-lg transform transition active:scale-95 mb-6 flex items-center justify-center gap-2">
                             <ShieldCheck />
