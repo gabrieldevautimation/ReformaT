@@ -1,5 +1,5 @@
 
-import { ArrowRight, AlertTriangle, FileText, TrendingUp } from 'lucide-react';
+import { ArrowRight, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function Hero() {
@@ -37,34 +37,19 @@ export function Hero() {
                 </div>
 
                 <div className="flex-1 w-full max-w-lg">
-                    <div className="bg-gov-light border border-gray-200 rounded-xl p-6 shadow-sm">
-                        <h3 className="text-gov-blue font-bold text-xl mb-4 flex items-center gap-2">
-                            <TrendingUp size={24} />
-                            Dados em Tempo Real
-                        </h3>
-                        <div className="space-y-4">
-                            <div className="bg-white p-4 rounded border border-gray-100 shadow-sm">
-                                <span className="text-xs text-gray-500 uppercase">Alíquota Padrão Estimada</span>
-                                <div className="text-3xl font-black text-gov-text">26,5% <span className="text-sm font-normal text-gray-400">a 27%</span></div>
-                                <div className="h-1 bg-gray-200 rounded mt-2 overflow-hidden">
-                                    <div className="h-full bg-gov-yellow w-[70%]"></div>
-                                </div>
-                            </div>
-
-                            <div className="bg-white p-4 rounded border border-gray-100 shadow-sm">
-                                <span className="text-xs text-gray-500 uppercase">Período de Transição</span>
-                                <div className="text-3xl font-black text-gov-text">2026 <span className="text-sm font-normal text-gray-400">- 2032</span></div>
-                                <p className="text-xs text-red-600 mt-1 font-semibold">O INÍCIO É AGORA.</p>
-                            </div>
-
-                            <div className="bg-gov-blue/5 p-4 rounded border border-blue-100">
-                                <p className="text-sm text-gov-blue font-semibold flex gap-2">
-                                    <FileText size={20} />
-                                    Entenda o que muda no seu bolso com nosso guia completo.
-                                </p>
-                            </div>
-                        </div>
+                    <div className="rounded-xl overflow-hidden shadow-2xl border-4 border-gov-blue/10 bg-black">
+                        <iframe
+                            className="w-full h-auto aspect-video"
+                            src="https://www.youtube.com/embed/6ipairv1B58"
+                            title="YouTube video player"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowFullScreen
+                        ></iframe>
                     </div>
+                    <p className="text-center text-sm text-gray-500 mt-3 font-medium">
+                        Assista ao vídeo explicativo (3min)
+                    </p>
                 </div>
             </div>
         </section>
