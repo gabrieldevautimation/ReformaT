@@ -24,7 +24,7 @@ export function Hero() {
                         <iframe
                             width="100%"
                             height="500"
-                            src="https://www.youtube.com/embed/6ipairv1B58?si=i-QWKyzN1U8joIVi&rel=0&modestbranding=1&controls=1"
+                            src="https://www.youtube.com/embed/y7efxBn4OPg?rel=0&modestbranding=1&controls=1"
                             title="YouTube video player"
                             frameBorder="0"
                             allow="autoplay; encrypted-media"
