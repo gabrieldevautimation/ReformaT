@@ -23,10 +23,11 @@ export function Hero() {
                     <div className="w-full relative pt-[56.25%] rounded-xl overflow-hidden shadow-2xl border-4 border-gov-blue/10 bg-black my-8">
                         <iframe
                             className="absolute top-0 left-0 w-full h-full"
-                            src="https://www.youtube.com/embed/6ipairv1B58?si=i-QWKyzN1U8joIVi"
+                            src="https://www.youtube-nocookie.com/embed/6ipairv1B58?si=i-QWKyzN1U8joIVi"
                             title="YouTube video player"
                             frameBorder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerPolicy="strict-origin-when-cross-origin"
                             allowFullScreen
                         ></iframe>
                     </div>
