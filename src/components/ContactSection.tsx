@@ -11,7 +11,7 @@ export function ContactSection() {
         },
         {
             q: "Para quem este curso NÃO é?",
-            a: "Este curso NÃO é para quem: busca soluções mágicas sem estudar, quer apenas certificado sem aplicar o conhecimento, ou não trabalha com empresas/finanças. Se você não se encaixa nisso, este curso é para você."
+            a: "Este curso NÃO é para quem: busca soluções mágicas sem estudar ou não trabalha com empresas/finanças. Se você não se encaixa nisso, este curso é para você."
         },
         {
             q: "Quanto tempo até ver resultados práticos?",
@@ -20,10 +20,6 @@ export function ContactSection() {
         {
             q: "O acesso é vitalício?",
             a: "Sim, você terá acesso permanente ao conteúdo e todas as atualizações legislativas de 2025 sem custo extra."
-        },
-        {
-            q: "Tem certificado?",
-            a: "Sim, certificado de conclusão de 40 horas válido como atividade complementar."
         }
     ];
 
