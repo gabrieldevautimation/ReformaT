@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gov-blue: #1351B4;
+  --color-gov-dark: #0C326F;
+  --color-gov-light: #F8F9FA;
+  --color-gov-text: #333333;
+  --color-gov-green: #168821;
+  --color-gov-yellow: #FFCD07;
+  --color-gov-red: #E60000;
+
+  --font-sans: 'Roboto', sans-serif;
+
+  --image-hero-pattern: url('https://www.gov.br/cgu/pt-br/assuntos/noticias/2021/4-mil-servidores-do-executivo-federal-sofreram-algum-tipo-de-punicao-em-2020/@@images/image');
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-gov-text);
+    background-color: #f8f8f8;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+.gov-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.gov-btn {
+  @apply rounded-full font-semibold px-6 py-2 transition-colors duration-200 ease-in-out;
+}
+
+.gov-btn-primary {
+  @apply bg-gov-blue text-white hover:bg-gov-dark;
+}
