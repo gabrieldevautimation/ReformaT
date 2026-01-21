@@ -1,5 +1,5 @@
-import React from 'react';
-import { CheckCircle, BookOpen, Video, FileCheck, ShieldCheck } from 'lucide-react';
+
+import { CheckCircle, BookOpen, FileCheck, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function CourseSection() {

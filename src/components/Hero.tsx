@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { ArrowRight, AlertTriangle, FileText, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 

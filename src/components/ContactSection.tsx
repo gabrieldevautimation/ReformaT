@@ -1,8 +1,8 @@
-import React from 'react';
+import { useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
 
 export function ContactSection() {
-    const [openIndex, setOpenIndex] = React.useState<number | null>(0);
+    const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     const faqs = [
         {

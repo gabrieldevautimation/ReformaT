@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { Folder, TrendingUp, Briefcase, GraduationCap, Heart } from 'lucide-react';
@@ -55,8 +55,8 @@ export function AssuntosPage() {
                                         key={i}
                                         to={assunto.link}
                                         className={`p-6 rounded-lg border-2 transition-all hover:shadow-lg ${assunto.destaque
-                                                ? 'bg-blue-50 border-gov-blue'
-                                                : 'bg-gov-light border-gray-200 hover:border-gov-blue'
+                                            ? 'bg-blue-50 border-gov-blue'
+                                            : 'bg-gov-light border-gray-200 hover:border-gov-blue'
                                             }`}
                                     >
                                         <Icon className="text-gov-blue mb-3" size={32} />
