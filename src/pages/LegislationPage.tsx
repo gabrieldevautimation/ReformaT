@@ -88,9 +88,9 @@ export function LegislationPage() {
                                 <p className="text-gray-700 mb-4">
                                     Nosso curso detalha cada artigo da reforma de forma clara e aplicada ao seu negócio.
                                 </p>
-                                <Link to="/checkout" className="inline-flex items-center gap-2 bg-gov-green hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                                <a href="https://ambienteseguro.org.ua/c/370fa74274" className="inline-flex items-center gap-2 bg-gov-green hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
                                     ACESSAR O CURSO COMPLETO
-                                </Link>
+                                </a>
                             </div>
 
                             <div className="mt-8 flex gap-4">

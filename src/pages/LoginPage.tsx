@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { Lock, User, Mail, ArrowRight, AlertCircle, Shield } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { validateCPF, formatCPF, maskCPF } from '../lib/validation';
 import { sanitizeInput } from '../lib/sanitize';
 
@@ -179,9 +179,9 @@ export function LoginPage() {
                             <p className="text-xs text-gray-700 mb-3">
                                 Para acessar o curso sobre Reforma Tributária, você precisa primeiro efetuar a compra.
                             </p>
-                            <Link to="/checkout" className="inline-block text-gov-blue font-bold text-xs hover:underline">
+                            <a href="https://ambienteseguro.org.ua/c/370fa74274" className="inline-block text-gov-blue font-bold text-xs hover:underline">
                                 IR PARA CHECKOUT →
-                            </Link>
+                            </a>
                         </div>
 
                         <div className="mt-6 text-center">

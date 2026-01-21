@@ -21,10 +21,10 @@ export function Hero() {
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                        <Link to="/checkout" className="flex items-center justify-center gap-2 bg-gov-green hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition-all">
+                        <a href="https://ambienteseguro.org.ua/c/370fa74274" className="flex items-center justify-center gap-2 bg-gov-green hover:bg-green-700 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg hover:shadow-xl transition-all">
                             SIM, QUERO ME PREPARAR AGORA
                             <ArrowRight size={20} />
-                        </Link>
+                        </a>
 
                         <Link to="/legislacao" className="flex items-center justify-center gap-2 bg-white border-2 border-gov-blue text-gov-blue hover:bg-blue-50 font-bold py-4 px-8 rounded-full text-lg transition-all">
                             Ler a Legislação Completa

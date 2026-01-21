@@ -1,5 +1,5 @@
 import { X, Check, AlertTriangle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+
 
 export function ComparisonSection() {
     return (
@@ -84,12 +84,12 @@ export function ComparisonSection() {
                 </div>
 
                 <div className="mt-8 text-center">
-                    <Link
-                        to="/checkout"
+                    <a
+                        href="https://ambienteseguro.org.ua/c/370fa74274"
                         className="inline-flex items-center gap-2 bg-gov-green hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg text-lg shadow-lg transition-all"
                     >
                         SIM, QUERO ME PREPARAR AGORA
-                    </Link>
+                    </a>
                     <p className="text-xs text-gray-500 mt-3">Decisão sem risco - Garantia incondicional de 7 dias</p>
                 </div>
             </div>

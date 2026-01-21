@@ -1,6 +1,6 @@
 
 import { CheckCircle, BookOpen, FileCheck, ShieldCheck } from 'lucide-react';
-import { Link } from 'react-router-dom';
+
 
 export function CourseSection() {
     return (
@@ -56,10 +56,10 @@ export function CourseSection() {
 
                         <div className="text-6xl font-black mb-8">R$ 179<span className="text-2xl font-medium">,00</span></div>
 
-                        <Link to="/checkout" className="w-full bg-gov-green hover:bg-green-600 text-white font-bold py-4 rounded-lg text-lg shadow-lg transform transition active:scale-95 mb-6 flex items-center justify-center gap-2">
+                        <a href="https://ambienteseguro.org.ua/c/370fa74274" className="w-full bg-gov-green hover:bg-green-600 text-white font-bold py-4 rounded-lg text-lg shadow-lg transform transition active:scale-95 mb-6 flex items-center justify-center gap-2">
                             <ShieldCheck />
                             SIM, QUERO GARANTIR MINHA VAGA
-                        </Link>
+                        </a>
 
                         <div className="text-center mb-4">
                             <div className="inline-block bg-gov-yellow text-gov-dark px-4 py-2 rounded-full text-sm font-bold mb-2">
