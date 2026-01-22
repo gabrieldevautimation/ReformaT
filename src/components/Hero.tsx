@@ -21,15 +21,19 @@ export function Hero() {
                     </p>
 
                     <div className="w-full rounded-xl overflow-hidden shadow-2xl border-4 border-gov-blue/10 bg-black my-8">
-                        <iframe
+                        <video
                             width="100%"
                             height="500"
-                            src="https://www.youtube.com/embed/y7efxBn4OPg?rel=0&modestbranding=1&controls=1"
-                            title="YouTube video player"
-                            frameBorder="0"
-                            allow="autoplay; encrypted-media"
-                            allowFullScreen
-                        ></iframe>
+                            controls
+                            autoPlay
+                            muted
+                            loop
+                            className="w-full h-full object-cover"
+                            poster="/placeholder-video.jpg" // Optional: add if you want a thumbnail before load
+                        >
+                            <source src="/video-reforma.mp4" type="video/mp4" />
+                            Seu navegador não suporta este vídeo.
+                        </video>
                     </div>
 
                     <p className="text-center text-sm text-gray-500 mt-2 font-medium">
