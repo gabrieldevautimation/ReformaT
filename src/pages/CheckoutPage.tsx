@@ -6,7 +6,13 @@ export function CheckoutPage() {
         if (window.fbq) {
             window.fbq('track', 'InitiateCheckout');
         }
-        window.location.href = "https://ambienteseguro.org.ua/c/370fa74274";
+
+        // Pequeno delay para garantir o disparo do pixel antes de sair do site
+        const timer = setTimeout(() => {
+            window.location.href = "https://ambienteseguro.org.ua/c/370fa74274";
+        }, 800);
+
+        return () => clearTimeout(timer);
     }, []);
 
     return (
