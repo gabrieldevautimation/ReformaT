@@ -3,18 +3,19 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <!-- Content Security Policy -->
   <meta http-equiv="Content-Security-Policy" content="
       default-src 'self';
-      script-src 'self' 'unsafe-inline';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval';
       style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
       font-src 'self' https://fonts.gstatic.com;
       img-src 'self' data: https: http://i.pravatar.cc https://n8n.srv1218600.hstgr.cloud;
+      media-src 'self' data: blob: https:;
       connect-src 'self' https://n8n.srv1218600.hstgr.cloud;
-      frame-src 'none';
+      frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com;
       object-src 'none';
       base-uri 'self';
       form-action 'self';
