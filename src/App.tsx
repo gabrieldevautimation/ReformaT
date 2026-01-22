@@ -9,10 +9,12 @@ import { ParticipePage } from './pages/ParticipePage';
 import { OrgaosPage } from './pages/OrgaosPage';
 import { AssuntosPage } from './pages/AssuntosPage';
 import { SuccessPage } from './pages/SuccessPage';
+import { PixelTracker } from './components/PixelTracker';
 
 function App() {
   return (
     <Router>
+      <PixelTracker />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/checkout" element={<CheckoutPage />} />

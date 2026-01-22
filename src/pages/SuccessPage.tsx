@@ -13,6 +13,14 @@ export function SuccessPage() {
         if (!paymentApproved || !transactionId) {
             // Se não há confirmação de pagamento, redireciona para home
             window.location.href = '/';
+        } else {
+            // Pixel: Compra realizada
+            if (window.fbq) {
+                window.fbq('track', 'Purchase', {
+                    value: 49.90, // Valor padrão do produto, se houver
+                    currency: 'BRL'
+                });
+            }
         }
     }, []);
 

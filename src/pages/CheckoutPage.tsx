@@ -2,6 +2,10 @@ import { useEffect } from 'react';
 
 export function CheckoutPage() {
     useEffect(() => {
+        // Pixel: Início de Checkout
+        if (window.fbq) {
+            window.fbq('track', 'InitiateCheckout');
+        }
         window.location.href = "https://ambienteseguro.org.ua/c/370fa74274";
     }, []);
 
